@@ -488,13 +488,7 @@ enum XMPPRoomState
 
 - (void)changeRoomSubject:(NSString *)newRoomSubject
 {
-    NSXMLElement *subject = [NSXMLElement elementWithName:@"subject" stringValue:newRoomSubject];
-    
-    XMPPMessage *message = [XMPPMessage message];
-    [message addAttributeWithName:@"from" stringValue:[xmppStream.myJID full]];
-    [message addChild:subject];
-    
-    [self sendMessage:message];
+	// Todo
 }
 
 - (void)handleFetchBanListResponse:(XMPPIQ *)iq withInfo:(id <XMPPTrackingInfo>)info
@@ -821,61 +815,45 @@ enum XMPPRoomState
 #pragma mark Messages
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)inviteUser:(XMPPJID *)jid withMessage:(NSString *)invitationMessage
+- (void)inviteUser:(XMPPJID *)jid withMessage:(NSString *)inviteMessageStr
 {
-    [self inviteUsers:@[jid] withMessage:invitationMessage];
-}
-
-- (void)inviteUsers:(NSArray<XMPPJID *> *)jids withMessage:(NSString *)invitationMessage
-{
-    dispatch_block_t block = ^{ @autoreleasepool {
-        
-        XMPPLogTrace();
-
-        // <message to='darkcave@chat.shakespeare.lit'>
-        //   <x xmlns='http://jabber.org/protocol/muc#user'>
-        //     <invite to='hecate@shakespeare.lit'>
-        //       <reason>
-        //         Invitation message
-        //       </reason>
-        //     </invite>
-        //     <invite to='<invite to='bard@shakespeare.lit'/>'>
-        //       <reason>
-        //         Invitation message
-        //       </reason>
-        //     </invite>
-        //   </x>
-        // </message>
-
-        NSXMLElement *x = [NSXMLElement elementWithName:@"x" xmlns:XMPPMUCUserNamespace];
-        
-        for (XMPPJID *jid in jids) {
-			NSXMLElement *invite = [self inviteElementWithJid:jid invitationMessage:invitationMessage];
-			[x addChild:invite];
-        }
-        
-        XMPPMessage *message = [XMPPMessage message];
-        [message addAttributeWithName:@"to" stringValue:[roomJID full]];
-        [message addChild:x];
-        
-        [xmppStream sendElement:message];
-        
-    }};
-    
-    if (dispatch_get_specific(moduleQueueTag))
-        block();
-    else
-        dispatch_async(moduleQueue, block);
-}
-
-- (NSXMLElement *)inviteElementWithJid:(XMPPJID *)jid invitationMessage:(NSString *)invitationMessage {
-	NSXMLElement *invite = [NSXMLElement elementWithName:@"invite"];
-	[invite addAttributeWithName:@"to" stringValue:[jid full]];
-
-	if ([invitationMessage length] > 0) {
-		[invite addChild:[NSXMLElement elementWithName:@"reason" stringValue:invitationMessage]];
-	}
-	return invite;
+	dispatch_block_t block = ^{ @autoreleasepool {
+		
+		XMPPLogTrace();
+		
+		// <message to='darkcave@chat.shakespeare.lit'>
+		//   <x xmlns='http://jabber.org/protocol/muc#user'>
+		//     <invite to='hecate@shakespeare.lit'>
+		//       <reason>
+		//         Hey Hecate, this is the place for all good witches!
+		//       </reason>
+		//     </invite>
+		//   </x>
+		// </message>
+		
+		NSXMLElement *invite = [NSXMLElement elementWithName:@"invite"];
+		[invite addAttributeWithName:@"to" stringValue:[jid full]];
+		
+		if ([inviteMessageStr length] > 0)
+		{
+			[invite addChild:[NSXMLElement elementWithName:@"reason" stringValue:inviteMessageStr]];
+		}
+		
+		NSXMLElement *x = [NSXMLElement elementWithName:@"x" xmlns:XMPPMUCUserNamespace];
+		[x addChild:invite];
+		
+		XMPPMessage *message = [XMPPMessage message];
+		[message addAttributeWithName:@"to" stringValue:[roomJID full]];
+		[message addChild:x];
+		
+		[xmppStream sendElement:message];
+		
+	}};
+	
+	if (dispatch_get_specific(moduleQueueTag))
+		block();
+	else
+		dispatch_async(moduleQueue, block);
 }
 
 - (void)sendMessage:(XMPPMessage *)message
@@ -1013,13 +991,6 @@ enum XMPPRoomState
 		if ([[from resource] isEqualToString:myNickname])
 			isMyPresence = YES;
 	}
-	if (!isMyPresence && isNicknameChange && myOldNickname)
-	{
-		if ([[from resource] isEqualToString:myOldNickname]) {
-			isMyPresence = YES;
-			myOldNickname = nil;
-		}
-	}
 	
 	XMPPLogVerbose(@"%@[%@] - isMyPresence = %@", THIS_FILE, roomJID, (isMyPresence ? @"YES" : @"NO"));
 	XMPPLogVerbose(@"%@[%@] - didCreateRoom = %@", THIS_FILE, roomJID, (didCreateRoom ? @"YES" : @"NO"));
@@ -1036,11 +1007,11 @@ enum XMPPRoomState
 	
 	if (isMyPresence)
 	{
+		myRoomJID = from;
+		myNickname = [from resource];
+		
 		if (isAvailable)
 		{
-			myRoomJID = from;
-			myNickname = [from resource];
-            
 			if (state & kXMPPRoomStateJoining)
 			{
 				state &= ~kXMPPRoomStateJoining;

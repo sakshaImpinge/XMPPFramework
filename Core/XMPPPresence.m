@@ -78,7 +78,7 @@
 			[self addAttributeWithName:@"type" stringValue:type];
 		
 		if (to)
-			[self addAttributeWithName:@"to" stringValue:[to full]];
+			[self addAttributeWithName:@"to" stringValue:[to description]];
 	}
 	return self;
 }

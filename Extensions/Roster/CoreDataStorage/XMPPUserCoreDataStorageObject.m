@@ -281,7 +281,7 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
 	self.subscription = [item attributeStringValueForName:@"subscription"];
 	self.ask = [item attributeStringValueForName:@"ask"];
 	
-	[self updateGroupsWithItem:item];
+//	[self updateGroupsWithItem:item];
 }
 
 - (void)recalculatePrimaryResource
@@ -390,17 +390,7 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
 
 - (NSArray *)allResources
 {
-    NSMutableArray *allResources = [NSMutableArray array];
-	
-    for (XMPPResourceCoreDataStorageObject *resource in [[self resources] allObjects]) {
-        
-        if(![resource isDeleted])
-        {
-            [allResources addObject:resource];
-        }
-    }
-    
-    return allResources;
+	return [[self resources] allObjects];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
