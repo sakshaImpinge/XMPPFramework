@@ -4,8 +4,6 @@
 
 @class XMPPElement;
 
-@class XMPPStream;
-
 extern const NSTimeInterval XMPPIDTrackerTimeoutNone;
 
 /**
