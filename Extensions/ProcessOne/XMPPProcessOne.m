@@ -148,7 +148,7 @@ NSString *const XMPPProcessOneSessionDate = @"XMPPProcessOneSessionDate";
 		
 		NSXMLElement *disable = [NSXMLElement elementWithName:@"disable" xmlns:@"p1:push"];
 		
-		XMPPIQ *iq = [XMPPIQ iqWithType:@"set" elementID:[XMPPStream generateUUID] child:disable];
+		XMPPIQ *iq = [XMPPIQ iqWithType:@"set" child:disable];
 		
 		[xmppStream sendElement:iq];
 		pushConfigurationSent = YES;
@@ -311,7 +311,7 @@ NSString *const XMPPProcessOneSessionDate = @"XMPPProcessOneSessionDate";
 	if (!sessionID || !sessionJID)
 	{
 		NSString *errMsg = @"Missing sessionID and/or sessionJID.";
-		NSDictionary *info = @{NSLocalizedDescriptionKey : errMsg};
+		NSDictionary *info = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
 		
 		NSError *err = [NSError errorWithDomain:XMPPStreamErrorDomain code:XMPPStreamInvalidState userInfo:info];
 		

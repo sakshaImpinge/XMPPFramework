@@ -84,7 +84,7 @@
 	{
 		// Custom code goes here (if needed)
 		
-        _myvCardTracker = [[XMPPIDTracker alloc] initWithStream:xmppStream dispatchQueue:moduleQueue];
+        _myvCardTracker = [[XMPPIDTracker alloc] initWithDispatchQueue:moduleQueue];
 
 		return YES;
 	}
@@ -147,7 +147,7 @@
 	if (dispatch_get_specific(moduleQueueTag))
 		block();
 	else
-		dispatch_async(moduleQueue, block);
+		dispatch_sync(moduleQueue, block);
 }
 
 - (XMPPvCardTemp *)vCardTempForJID:(XMPPJID *)jid shouldFetch:(BOOL)shouldFetch{
@@ -185,14 +185,16 @@
     dispatch_block_t block = ^{ @autoreleasepool {
 
         XMPPvCardTemp *newvCardTemp = [vCardTemp copy];
+
+        NSString *myvCardElementID = [xmppStream generateUUID];
         
-        XMPPIQ *iq = [XMPPIQ iqWithType:@"set" to:nil elementID:[xmppStream generateUUID] child:newvCardTemp];
+        XMPPIQ *iq = [XMPPIQ iqWithType:@"set" to:nil elementID:myvCardElementID child:newvCardTemp];
         [xmppStream sendElement:iq];
         
-        [_myvCardTracker addElement:iq
-                             target:self
-                           selector:@selector(handleMyvcard:withInfo:)
-                            timeout:600];
+        [_myvCardTracker addID:myvCardElementID
+                       target:self
+                     selector:@selector(handleMyvcard:withInfo:)
+                      timeout:600];
         
         [self _updatevCardTemp:newvCardTemp forJID:[xmppStream myJID]];
         
@@ -201,7 +203,7 @@
 	if (dispatch_get_specific(moduleQueueTag))
 		block();
 	else
-		dispatch_async(moduleQueue, block);
+		dispatch_sync(moduleQueue, block);
 
 }
 
@@ -233,16 +235,8 @@
 
 - (void)_fetchvCardTempForJID:(XMPPJID *)jid{
     if(!jid) return;
-    
 
-    XMPPIQ *iq = [XMPPvCardTemp iqvCardRequestForJID:jid];
-    
-    [_myvCardTracker addElement:iq
-                         target:self
-                       selector:@selector(handleFetchvCard:withInfo:)
-                        timeout:600];
-    
-    [xmppStream sendElement:iq];
+    [xmppStream sendElement:[XMPPvCardTemp iqvCardRequestForJID:jid]];
 }
 
 - (void)handleMyvcard:(XMPPIQ *)iq withInfo:(XMPPBasicTrackingInfo *)trackerInfo{
@@ -255,30 +249,8 @@
     {
         NSXMLElement *errorElement = [iq elementForName:@"error"];
         [(id <XMPPvCardTempModuleDelegate>)multicastDelegate xmppvCardTempModule:self failedToUpdateMyvCard:errorElement];
-    }
-}
+    }        
 
-- (void)handleFetchvCard:(XMPPIQ*)iq withInfo:(XMPPBasicTrackingInfo*)trackerInfo {
-    XMPPJID *jid = trackerInfo.element.to;
-    // If JID was omitted from request, you were fetching your own vCard
-    if (!jid) {
-        jid = xmppStream.myJID;
-    }
-    if([iq isErrorIQ])
-    {
-        NSXMLElement *errorElement = [iq elementForName:@"error"];
-        [(id <XMPPvCardTempModuleDelegate>)multicastDelegate xmppvCardTempModule:self failedToFetchvCardForJID:jid error:errorElement];
-    } else if([iq isResultIQ]) {
-        NSXMLElement *vCard = [[iq elementForName:@"vCard"] copy];
-        if (vCard.childCount == 0) {
-            [(id <XMPPvCardTempModuleDelegate>)multicastDelegate xmppvCardTempModule:self failedToFetchvCardForJID:jid error:nil];
-        } else if (![iq from]) {
-            // If there's no fromJID, it means the vCard was already within didReceiveIQ, and this is
-            // the vCard for yourself
-            XMPPvCardTemp *vCardTemp = [XMPPvCardTemp vCardTempFromElement:vCard];
-            [self _updatevCardTemp:vCardTemp forJID:jid];
-        }
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -289,12 +261,7 @@
 {
 	// This method is invoked on the moduleQueue.
 	
-    if (!iq.from) {
-        // Some error responses for self or contacts don't have a "from"
-        [_myvCardTracker invokeForID:iq.elementID withObject:iq];
-    } else {
-        [_myvCardTracker invokeForElement:iq withObject:iq];
-    }
+    [_myvCardTracker invokeForID:[iq elementID] withObject:iq];
     
 	// Remember XML heirarchy memory management rules.
 	// The passed parameter is a subnode of the IQ, and we need to pass it to an asynchronous operation.

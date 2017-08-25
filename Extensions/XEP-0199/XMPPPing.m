@@ -170,6 +170,8 @@
 	XMPPIQ *iq = [XMPPIQ iqWithType:@"get" to:nil elementID:pingID child:ping];
 	
 	[xmppStream sendElement:iq];
+    
+    NSLog(@"Ping stanza sent: %@: ",iq);
 	
 	return pingID;
 }
@@ -200,6 +202,8 @@
 	XMPPIQ *iq = [XMPPIQ iqWithType:@"get" to:jid elementID:pingID child:ping];
 	
 	[xmppStream sendElement:iq];
+    
+    NSLog(@"Sent Ping to server %@:",iq);
 	
 	return pingID;
 }

@@ -29,17 +29,11 @@
  * multiple instances of this class instead (using different database filenames), as this way you can have
  * concurrent writes to multiple databases.
 **/
-+ (instancetype)sharedInstance;
++ (XMPPMessageArchivingCoreDataStorage *)sharedInstance;
 
 
 @property (strong) NSString *messageEntityName;
 @property (strong) NSString *contactEntityName;
-
-/**
- * Defines elements within an archived message that will be tested for content presence
- * when determining whether to store the message. By default, only the body element is examined.
- */
-@property (copy, nonatomic) NSArray<NSString *> *relevantContentXPaths;
 
 - (NSEntityDescription *)messageEntity:(NSManagedObjectContext *)moc;
 - (NSEntityDescription *)contactEntity:(NSManagedObjectContext *)moc;

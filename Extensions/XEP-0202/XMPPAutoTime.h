@@ -82,11 +82,6 @@
 @property (readonly) NSTimeInterval timeDifference;
 
 /**
- * Returns the date of the target based on the time difference.
-**/
-@property (readonly) NSDate *date;
-
-/**
  * The last time we've completed a calibration.
 **/
 @property (readonly) dispatch_time_t lastCalibrationTime;
@@ -113,12 +108,5 @@
 @optional
 
 - (void)xmppAutoTime:(XMPPAutoTime *)sender didUpdateTimeDifference:(NSTimeInterval)timeDifference;
-
-@end
-
-@interface XMPPStream (XMPPAutoTime)
-
-- (NSTimeInterval)xmppAutoTime_timeDifferenceForTargetJID:(XMPPJID *)targetJID;
-- (NSDate *)xmppAutoTime_dateForTargetJID:(XMPPJID *)targetJID;
 
 @end

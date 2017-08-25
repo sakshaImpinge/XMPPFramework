@@ -31,7 +31,6 @@ static NSString *const XMPPMUCOwnerNamespace = @"http://jabber.org/protocol/muc#
 	
 	__strong XMPPJID *myRoomJID;
 	__strong NSString *myNickname;
-	__strong NSString *myOldNickname;
 	
 	__strong NSString *roomSubject;
 	
@@ -126,10 +125,6 @@ static NSString *const XMPPMUCOwnerNamespace = @"http://jabber.org/protocol/muc#
 - (void)changeRoomSubject:(NSString *)newRoomSubject;
 
 - (void)inviteUser:(XMPPJID *)jid withMessage:(NSString *)invitationMessage;
-/**
- * Allows sending invitation message with multiple invitees
- */
-- (void)inviteUsers:(NSArray<XMPPJID *> *)jids withMessage:(NSString *)invitationMessage;
 
 - (void)sendMessage:(XMPPMessage *)message;
 
@@ -288,10 +283,7 @@ static NSString *const XMPPMUCOwnerNamespace = @"http://jabber.org/protocol/muc#
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender;
 - (void)xmppRoomDidLeave:(XMPPRoom *)sender;
 
-
 - (void)xmppRoomDidDestroy:(XMPPRoom *)sender;
-- (void)xmppRoom:(XMPPRoom *)sender didFailToDestroy:(XMPPIQ *)iqError;
-
 
 - (void)xmppRoom:(XMPPRoom *)sender occupantDidJoin:(XMPPJID *)occupantJID withPresence:(XMPPPresence *)presence;
 - (void)xmppRoom:(XMPPRoom *)sender occupantDidLeave:(XMPPJID *)occupantJID withPresence:(XMPPPresence *)presence;
@@ -314,6 +306,5 @@ static NSString *const XMPPMUCOwnerNamespace = @"http://jabber.org/protocol/muc#
 
 - (void)xmppRoom:(XMPPRoom *)sender didEditPrivileges:(XMPPIQ *)iqResult;
 - (void)xmppRoom:(XMPPRoom *)sender didNotEditPrivileges:(XMPPIQ *)iqError;
-- (void)xmppRoomDidChangeSubject:(XMPPRoom *)sender;
 
 @end

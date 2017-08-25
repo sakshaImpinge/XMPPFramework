@@ -24,8 +24,6 @@
 - (id)initWithMessageArchivingStorage:(id <XMPPMessageArchivingStorage>)storage;
 - (id)initWithMessageArchivingStorage:(id <XMPPMessageArchivingStorage>)storage dispatchQueue:(dispatch_queue_t)queue;
 
-@property (readonly, strong) id <XMPPMessageArchivingStorage> xmppMessageArchivingStorage;
-
 /**
  * XEP-0136 Message Archiving outlines a complex protocol for:
  * 

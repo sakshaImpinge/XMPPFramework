@@ -20,7 +20,6 @@
 {
 	NSString *messageEntityName;
 	NSString *contactEntityName;
-    NSArray<NSString *> *relevantContentXPaths;
 }
 
 @end
@@ -33,7 +32,7 @@
 
 static XMPPMessageArchivingCoreDataStorage *sharedInstance;
 
-+ (instancetype)sharedInstance
++ (XMPPMessageArchivingCoreDataStorage *)sharedInstance
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
@@ -58,8 +57,6 @@ static XMPPMessageArchivingCoreDataStorage *sharedInstance;
 	
 	messageEntityName = @"XMPPMessageArchiving_Message_CoreDataObject";
 	contactEntityName = @"XMPPMessageArchiving_Contact_CoreDataObject";
-    
-    relevantContentXPaths = @[@"./*[local-name()='body']"];
 }
 
 /**
@@ -169,21 +166,20 @@ static XMPPMessageArchivingCoreDataStorage *sharedInstance;
 	
 	NSString *predicateFrmt = @"composing == YES AND bareJidStr == %@ AND outgoing == %@ AND streamBareJidStr == %@";
 	NSPredicate *predicate = [NSPredicate predicateWithFormat:predicateFrmt,
-                                                            [messageJid bare], @(isOutgoing),
-                                                            [streamJid bare]];
+	                             [messageJid bare], [NSNumber numberWithBool:isOutgoing], [streamJid bare]];
 	
 	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO];
 	
 	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 	fetchRequest.entity = messageEntity;
 	fetchRequest.predicate = predicate;
-	fetchRequest.sortDescriptors = @[sortDescriptor];
+	fetchRequest.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
 	fetchRequest.fetchLimit = 1;
 	
 	NSError *error = nil;
 	NSArray *results = [moc executeFetchRequest:fetchRequest error:&error];
 	
-	if (results == nil || error)
+	if (results == nil)
 	{
 		XMPPLogError(@"%@: %@ - Error executing fetchRequest: %@", THIS_FILE, THIS_METHOD, fetchRequest);
 	}
@@ -193,26 +189,6 @@ static XMPPMessageArchivingCoreDataStorage *sharedInstance;
 	}
 	
 	return result;
-}
-
-- (BOOL)messageContainsRelevantContent:(XMPPMessage *)message
-{
-    for (NSString *XPath in self.relevantContentXPaths) {
-        NSError *error;
-        NSArray *nodes = [message nodesForXPath:XPath error:&error];
-        if (!nodes) {
-            XMPPLogError(@"%@: %@ - Error querying XPath (%@): %@", THIS_FILE, THIS_METHOD, XPath, error);
-            continue;
-        }
-        
-        for (NSXMLNode *node in nodes) {
-            if (node.stringValue.length > 0) {
-                return YES;
-            }
-        }
-    }
-    
-    return NO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -345,36 +321,6 @@ static XMPPMessageArchivingCoreDataStorage *sharedInstance;
 	return [NSEntityDescription entityForName:[self contactEntityName] inManagedObjectContext:moc];
 }
 
-- (NSArray<NSString *> *)relevantContentXPaths
-{
-    __block NSArray *result;
-    
-    dispatch_block_t block = ^{
-        result = relevantContentXPaths;
-    };
-    
-    if (dispatch_get_specific(storageQueueTag))
-        block();
-    else
-        dispatch_sync(storageQueue, block);
-    
-    return result;
-}
-
-- (void)setRelevantContentXPaths:(NSArray<NSString *> *)relevantContentXPathsToSet
-{
-    NSArray *newValue = [relevantContentXPathsToSet copy];
-    
-    dispatch_block_t block = ^{
-        relevantContentXPaths = newValue;
-    };
-    
-    if (dispatch_get_specific(storageQueueTag))
-        block();
-    else
-        dispatch_async(storageQueue, block);
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Storage Protocol
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -392,9 +338,9 @@ static XMPPMessageArchivingCoreDataStorage *sharedInstance;
 	BOOL isComposing = NO;
 	BOOL shouldDeleteComposingMessage = NO;
 	
-	if (![self messageContainsRelevantContent:message])
+	if ([messageBody length] == 0)
 	{
-		// Message doesn't have any content relevant for the module's user.
+		// Message doesn't have a body.
 		// Check to see if it has a chat state (composing, paused, etc).
 		
 		isComposing = [message hasComposingChatState];
@@ -493,7 +439,7 @@ static XMPPMessageArchivingCoreDataStorage *sharedInstance;
 			
 			// Create or update contact (if message with actual content)
 			
-			if ([self messageContainsRelevantContent:message])
+			if ([messageBody length] > 0)
 			{
 				BOOL didCreateNewContact = NO;
 				
@@ -514,7 +460,7 @@ static XMPPMessageArchivingCoreDataStorage *sharedInstance;
 					
 				contact.mostRecentMessageTimestamp = archivedMessage.timestamp;
 				contact.mostRecentMessageBody = archivedMessage.body;
-				contact.mostRecentMessageOutgoing = @(isOutgoing);
+				contact.mostRecentMessageOutgoing = [NSNumber numberWithBool:isOutgoing];
 				
 				XMPPLogVerbose(@"New contact: %@", contact);
 				

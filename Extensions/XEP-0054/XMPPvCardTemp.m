@@ -21,6 +21,8 @@
 
 #if DEBUG
   static const int xmppLogLevel = XMPP_LOG_LEVEL_ERROR;
+#else
+  static const int xmppLogLevel = XMPP_LOG_LEVEL_ERROR;
 #endif
 
 NSString *const kXMPPNSvCardTemp = @"vcard-temp";
@@ -29,7 +31,6 @@ NSString *const kXMPPvCardTempElement = @"vCard";
 
 @implementation XMPPvCardTemp
 
-#if DEBUG
 
 + (void)initialize {
 	// We use the object_setClass method below to dynamically change the class from a standard NSXMLElement.
@@ -53,8 +54,6 @@ NSString *const kXMPPvCardTempElement = @"vCard";
 		exit(15);
 	}
 }
-
-#endif
 
 + (XMPPvCardTemp *)vCardTempFromElement:(NSXMLElement *)elem {
 	object_setClass(elem, [XMPPvCardTemp class]);
@@ -88,7 +87,7 @@ NSString *const kXMPPvCardTempElement = @"vCard";
 
 
 + (XMPPIQ *)iqvCardRequestForJID:(XMPPJID *)jid {
-  XMPPIQ *iq = [XMPPIQ iqWithType:@"get" to:[jid bareJID] elementID:[XMPPStream generateUUID]];
+  XMPPIQ *iq = [XMPPIQ iqWithType:@"get" to:[jid bareJID]];
   NSXMLElement *vCardElem = [NSXMLElement elementWithName:kXMPPvCardTempElement xmlns:kXMPPNSvCardTemp];
   
   [iq addChild:vCardElem];
@@ -144,32 +143,21 @@ NSString *const kXMPPvCardTempElement = @"vCard";
 
 
 - (void)setPhoto:(NSData *)data {
-    
-    NSXMLElement *photo = [self elementForName:@"PHOTO"];
-    
-    if(photo)
-    {
-        [self removeChildAtIndex:[[self children] indexOfObject:photo]];
-    }
-    
-    if([data length])
-    {    
-        NSXMLElement *photo = [NSXMLElement elementWithName:@"PHOTO"];
-        [self addChild:photo];
-        
-        NSString *imageType = [data xmpp_imageType];
-        
-        if([imageType length])
-        {
-            NSXMLElement *type = [NSXMLElement elementWithName:@"TYPE"];
-            [photo addChild:type];
-            [type setStringValue:imageType];
-        }
-        
-        NSXMLElement *binval = [NSXMLElement elementWithName:@"BINVAL"];
-        [photo addChild:binval];
-        [binval setStringValue:[data xmpp_base64Encoded]];
-    }
+	NSXMLElement *photo = [self elementForName:@"PHOTO"];
+	
+	if (photo == nil) {
+		photo = [NSXMLElement elementWithName:@"PHOTO"];
+		[self addChild:photo];
+	}
+	
+	NSXMLElement *binval = [photo elementForName:@"BINVAL"];
+	
+	if (binval == nil) {
+		binval = [NSXMLElement elementWithName:@"BINVAL"];
+		[photo addChild:binval];
+	}
+	
+	[binval setStringValue:[data xmpp_base64Encoded]];
 }
 
 
@@ -256,7 +244,7 @@ NSString *const kXMPPvCardTempElement = @"vCard";
 }
 
 
-- (NSString *)vPrefix {
+- (NSString *)prefix {
 	NSString *result = nil;
 	NSXMLElement *name = [self elementForName:@"N"];
 	
@@ -272,7 +260,7 @@ NSString *const kXMPPvCardTempElement = @"vCard";
 }
 
 
-- (void)setVPrefix:(NSString *)prefix {
+- (void)setPrefix:(NSString *)prefix {
 	XMPP_VCARD_SET_N_CHILD(prefix, @"PREFIX");
 }
 
@@ -322,43 +310,11 @@ NSString *const kXMPPvCardTempElement = @"vCard";
 - (void)clearTelecomsAddresses { }
 
 
-- (NSArray *)emailAddresses {
-    NSMutableArray *result = [NSMutableArray new];
-    NSArray *emails = [self elementsForName:@"EMAIL"];
-    for (NSXMLElement *email in emails) {
-        XMPPvCardTempEmail *vCardTempEmail = [XMPPvCardTempEmail vCardEmailFromElement:email];
-        [result addObject:vCardTempEmail];
-    }
-        
-    return result;
-}
-
-- (void)addEmailAddress:(XMPPvCardTempEmail *)email {
-    [self addChild:email];
-}
-
-- (void)removeEmailAddress:(XMPPvCardTempEmail *)email {
-    NSArray *emailElements = [self elementsForName:@"EMAIL"];
-    for (NSXMLElement *element in emailElements) {
-        XMPPvCardTempEmail *vCardTempEmail = [XMPPvCardTempEmail vCardEmailFromElement:[element copy]];
-        if ([vCardTempEmail.userid isEqualToString:email.userid]) {
-            NSUInteger index = [[self children] indexOfObject:element];
-            [self removeChildAtIndex:index];
-        }
-    }
-
-}
-
-- (void)setEmailAddresses:(NSArray *)emails {
-    [self clearEmailAddresses];
-    for (XMPPvCardTempEmail *email in emails) {
-        [self addEmailAddress:email];
-    }
-}
-
-- (void)clearEmailAddresses {
-    [self removeElementsForName:@"EMAIL"];
-}
+- (NSArray *)emailAddresses { return nil; }
+- (void)addEmailAddress:(XMPPvCardTempEmail *)email { }
+- (void)removeEmailAddress:(XMPPvCardTempEmail *)email { }
+- (void)setEmailAddresses:(NSArray *)emails { }
+- (void)clearEmailAddresses { }
 
 
 - (XMPPJID *)jid {
@@ -778,14 +734,7 @@ NSString *const kXMPPvCardTempElement = @"vCard";
 	if (phonetic != nil) {
 		[elem setStringValue:phonetic];
 	} else if (sound != nil) {
-        // The old code never actually did anything
-        // because the phonetic object is a NSString but
-        // the children are DDXMLNodes.
-        //
-        // [self removeChildAtIndex:[[self children] indexOfObject:phonetic]];
-        
-        // Maybe this is what was intended? I'm not sure.
-        [self removeChildAtIndex:[[self children] indexOfObject:sound]];
+		[self removeChildAtIndex:[[self children] indexOfObject:phonetic]];
 	}
 }
 
@@ -856,12 +805,12 @@ NSString *const kXMPPvCardTempElement = @"vCard";
 }
 
 
-- (NSString *)desc {
+- (NSString *)description {
 	return [[self elementForName:@"DESC"] stringValue];
 }
 
 
-- (void)setDesc:(NSString *)desc {
+- (void)setDescription:(NSString *)desc {
 	XMPP_VCARD_SET_STRING_CHILD(desc, @"DESC");
 }
 
@@ -895,7 +844,7 @@ NSString *const kXMPPvCardTempElement = @"vCard";
 	}
 	
 	if (elem != nil) {
-		for (NSString *cls in @[@"PUBLIC", @"PRIVATE", @"CONFIDENTIAL"]) {
+		for (NSString *cls in [NSArray arrayWithObjects:@"PUBLIC", @"PRIVATE", @"CONFIDENTIAL", nil]) {
 			NSXMLElement *priv = [elem elementForName:cls];
 			if (priv != nil) {
 				[elem removeChildAtIndex:[[elem children] indexOfObject:priv]];

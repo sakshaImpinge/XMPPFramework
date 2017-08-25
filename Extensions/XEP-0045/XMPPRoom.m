@@ -479,7 +479,6 @@ enum XMPPRoomState
 
 - (void)changeNickname:(NSString *)newNickname
 {
-	myOldNickname = [myNickname copy];
 	myNickname = [newNickname copy];
     myRoomJID = [XMPPJID jidWithUser:[roomJID user] domain:[roomJID domain] resource:myNickname];
     XMPPPresence *presence = [XMPPPresence presenceWithType:nil to:myRoomJID];
@@ -488,13 +487,7 @@ enum XMPPRoomState
 
 - (void)changeRoomSubject:(NSString *)newRoomSubject
 {
-    NSXMLElement *subject = [NSXMLElement elementWithName:@"subject" stringValue:newRoomSubject];
-    
-    XMPPMessage *message = [XMPPMessage message];
-    [message addAttributeWithName:@"from" stringValue:[xmppStream.myJID full]];
-    [message addChild:subject];
-    
-    [self sendMessage:message];
+	// Todo
 }
 
 - (void)handleFetchBanListResponse:(XMPPIQ *)iq withInfo:(id <XMPPTrackingInfo>)info
@@ -771,13 +764,13 @@ enum XMPPRoomState
 {
 	XMPPLogTrace();
 	
-	if ([iq isResultIQ])
+	if ([[iq type] isEqualToString:@"result"])
 	{
 		[multicastDelegate xmppRoomDidDestroy:self];
 	}
 	else
 	{
-		[multicastDelegate xmppRoom:self didFailToDestroy:iq];
+		// Todo...
 	}
 }
 
@@ -821,61 +814,45 @@ enum XMPPRoomState
 #pragma mark Messages
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)inviteUser:(XMPPJID *)jid withMessage:(NSString *)invitationMessage
+- (void)inviteUser:(XMPPJID *)jid withMessage:(NSString *)inviteMessageStr
 {
-    [self inviteUsers:@[jid] withMessage:invitationMessage];
-}
-
-- (void)inviteUsers:(NSArray<XMPPJID *> *)jids withMessage:(NSString *)invitationMessage
-{
-    dispatch_block_t block = ^{ @autoreleasepool {
-        
-        XMPPLogTrace();
-
-        // <message to='darkcave@chat.shakespeare.lit'>
-        //   <x xmlns='http://jabber.org/protocol/muc#user'>
-        //     <invite to='hecate@shakespeare.lit'>
-        //       <reason>
-        //         Invitation message
-        //       </reason>
-        //     </invite>
-        //     <invite to='<invite to='bard@shakespeare.lit'/>'>
-        //       <reason>
-        //         Invitation message
-        //       </reason>
-        //     </invite>
-        //   </x>
-        // </message>
-
-        NSXMLElement *x = [NSXMLElement elementWithName:@"x" xmlns:XMPPMUCUserNamespace];
-        
-        for (XMPPJID *jid in jids) {
-			NSXMLElement *invite = [self inviteElementWithJid:jid invitationMessage:invitationMessage];
-			[x addChild:invite];
-        }
-        
-        XMPPMessage *message = [XMPPMessage message];
-        [message addAttributeWithName:@"to" stringValue:[roomJID full]];
-        [message addChild:x];
-        
-        [xmppStream sendElement:message];
-        
-    }};
-    
-    if (dispatch_get_specific(moduleQueueTag))
-        block();
-    else
-        dispatch_async(moduleQueue, block);
-}
-
-- (NSXMLElement *)inviteElementWithJid:(XMPPJID *)jid invitationMessage:(NSString *)invitationMessage {
-	NSXMLElement *invite = [NSXMLElement elementWithName:@"invite"];
-	[invite addAttributeWithName:@"to" stringValue:[jid full]];
-
-	if ([invitationMessage length] > 0) {
-		[invite addChild:[NSXMLElement elementWithName:@"reason" stringValue:invitationMessage]];
-	}
-	return invite;
+	dispatch_block_t block = ^{ @autoreleasepool {
+		
+		XMPPLogTrace();
+		
+		// <message to='darkcave@chat.shakespeare.lit'>
+		//   <x xmlns='http://jabber.org/protocol/muc#user'>
+		//     <invite to='hecate@shakespeare.lit'>
+		//       <reason>
+		//         Hey Hecate, this is the place for all good witches!
+		//       </reason>
+		//     </invite>
+		//   </x>
+		// </message>
+		
+		NSXMLElement *invite = [NSXMLElement elementWithName:@"invite"];
+		[invite addAttributeWithName:@"to" stringValue:[jid full]];
+		
+		if ([inviteMessageStr length] > 0)
+		{
+			[invite addChild:[NSXMLElement elementWithName:@"reason" stringValue:inviteMessageStr]];
+		}
+		
+		NSXMLElement *x = [NSXMLElement elementWithName:@"x" xmlns:XMPPMUCUserNamespace];
+		[x addChild:invite];
+		
+		XMPPMessage *message = [XMPPMessage message];
+		[message addAttributeWithName:@"to" stringValue:[roomJID full]];
+		[message addChild:x];
+		
+		[xmppStream sendElement:message];
+		
+	}};
+	
+	if (dispatch_get_specific(moduleQueueTag))
+		block();
+	else
+		dispatch_async(moduleQueue, block);
 }
 
 - (void)sendMessage:(XMPPMessage *)message
@@ -1004,7 +981,7 @@ enum XMPPRoomState
 	// Server's don't always properly send the statusCodes in every situation.
 	// So we have some extra checks to ensure the boolean variables are correct.
 	
-	if (didCreateRoom)
+	if (didCreateRoom || isNicknameChange)
 	{
 		isMyPresence = YES;
 	}
@@ -1012,13 +989,6 @@ enum XMPPRoomState
 	{
 		if ([[from resource] isEqualToString:myNickname])
 			isMyPresence = YES;
-	}
-	if (!isMyPresence && isNicknameChange && myOldNickname)
-	{
-		if ([[from resource] isEqualToString:myOldNickname]) {
-			isMyPresence = YES;
-			myOldNickname = nil;
-		}
 	}
 	
 	XMPPLogVerbose(@"%@[%@] - isMyPresence = %@", THIS_FILE, roomJID, (isMyPresence ? @"YES" : @"NO"));
@@ -1036,11 +1006,11 @@ enum XMPPRoomState
 	
 	if (isMyPresence)
 	{
+		myRoomJID = from;
+		myNickname = [from resource];
+		
 		if (isAvailable)
 		{
-			myRoomJID = from;
-			myNickname = [from resource];
-            
 			if (state & kXMPPRoomStateJoining)
 			{
 				state &= ~kXMPPRoomStateJoining;
@@ -1106,7 +1076,6 @@ enum XMPPRoomState
     else if ([message isGroupChatMessageWithSubject])
     {
         roomSubject = [message subject];
-        [multicastDelegate xmppRoomDidChangeSubject:self];
     }
 	else
 	{
