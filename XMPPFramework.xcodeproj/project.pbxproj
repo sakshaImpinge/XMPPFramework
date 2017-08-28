@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4382DA7C1F54359B001A0EF7 /* XMPPPlainAuthentication.h in Headers */ = {isa = PBXBuildFile; fileRef = 4382DA771F54359B001A0EF7 /* XMPPPlainAuthentication.h */; };
+		4382DA7D1F54359B001A0EF7 /* XMPPPlainAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 4382DA781F54359B001A0EF7 /* XMPPPlainAuthentication.m */; };
+		4382DA7E1F54359B001A0EF7 /* XMPPXFacebookPlatformAuthentication.h in Headers */ = {isa = PBXBuildFile; fileRef = 4382DA7A1F54359B001A0EF7 /* XMPPXFacebookPlatformAuthentication.h */; };
+		4382DA7F1F54359B001A0EF7 /* XMPPXFacebookPlatformAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 4382DA7B1F54359B001A0EF7 /* XMPPXFacebookPlatformAuthentication.m */; };
 		43C4D9891F53E215000D7066 /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 43C4D96B1F53E215000D7066 /* GCDAsyncSocket.h */; };
 		43C4D98A1F53E215000D7066 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 43C4D96C1F53E215000D7066 /* GCDAsyncSocket.m */; };
 		43C4D98B1F53E215000D7066 /* GCDAsyncUdpSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 43C4D96D1F53E215000D7066 /* GCDAsyncUdpSocket.h */; };
@@ -274,6 +278,10 @@
 
 /* Begin PBXFileReference section */
 		0D44BAEA1E537066000930E0 /* XMPPFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XMPPFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4382DA771F54359B001A0EF7 /* XMPPPlainAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPPlainAuthentication.h; sourceTree = "<group>"; };
+		4382DA781F54359B001A0EF7 /* XMPPPlainAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPPlainAuthentication.m; sourceTree = "<group>"; };
+		4382DA7A1F54359B001A0EF7 /* XMPPXFacebookPlatformAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPXFacebookPlatformAuthentication.h; sourceTree = "<group>"; };
+		4382DA7B1F54359B001A0EF7 /* XMPPXFacebookPlatformAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPXFacebookPlatformAuthentication.m; sourceTree = "<group>"; };
 		43C4D96B1F53E215000D7066 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
 		43C4D96C1F53E215000D7066 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 		43C4D96D1F53E215000D7066 /* GCDAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncUdpSocket.h; sourceTree = "<group>"; };
@@ -614,6 +622,24 @@
 			path = Dependenices;
 			sourceTree = "<group>";
 		};
+		4382DA761F54359B001A0EF7 /* Plain */ = {
+			isa = PBXGroup;
+			children = (
+				4382DA771F54359B001A0EF7 /* XMPPPlainAuthentication.h */,
+				4382DA781F54359B001A0EF7 /* XMPPPlainAuthentication.m */,
+			);
+			path = Plain;
+			sourceTree = "<group>";
+		};
+		4382DA791F54359B001A0EF7 /* X-Facebook-Platform */ = {
+			isa = PBXGroup;
+			children = (
+				4382DA7A1F54359B001A0EF7 /* XMPPXFacebookPlatformAuthentication.h */,
+				4382DA7B1F54359B001A0EF7 /* XMPPXFacebookPlatformAuthentication.m */,
+			);
+			path = "X-Facebook-Platform";
+			sourceTree = "<group>";
+		};
 		43C4D9691F53E215000D7066 /* CocoaAsyncSocket */ = {
 			isa = PBXGroup;
 			children = (
@@ -732,6 +758,8 @@
 		43C4D9C11F53E28F000D7066 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
+				4382DA761F54359B001A0EF7 /* Plain */,
+				4382DA791F54359B001A0EF7 /* X-Facebook-Platform */,
 				43C4D9C21F53E28F000D7066 /* Anonymous */,
 				43C4D9C51F53E28F000D7066 /* Deprecated-Digest */,
 				43C4D9C81F53E28F000D7066 /* Deprecated-Plain */,
@@ -1337,6 +1365,7 @@
 			files = (
 				43C4DB171F53E28F000D7066 /* XMPPIQ+LastActivity.h in Headers */,
 				43C4DAF81F53E28F000D7066 /* XMPPProcessOne.h in Headers */,
+				4382DA7E1F54359B001A0EF7 /* XMPPXFacebookPlatformAuthentication.h in Headers */,
 				43C4DAD51F53E28F000D7066 /* XMPPPlainAuthentication.h in Headers */,
 				43C4DAE51F53E28F000D7066 /* XMPPInternal.h in Headers */,
 				43C4DB111F53E28F000D7066 /* XMPPIQ+JabberRPC.h in Headers */,
@@ -1431,6 +1460,7 @@
 				43C4DB6B1F53E28F000D7066 /* XMPPCapabilitiesCoreDataStorage.h in Headers */,
 				43C4DB391F53E28F000D7066 /* XMPPRoomOccupant.h in Headers */,
 				43C4DB151F53E28F000D7066 /* XMPPJabberRPCModule.h in Headers */,
+				4382DA7C1F54359B001A0EF7 /* XMPPPlainAuthentication.h in Headers */,
 				43C4DAE41F53E28F000D7066 /* XMPPFramework.h in Headers */,
 				43C4DB501F53E28F000D7066 /* XMPPvCardTempModule.h in Headers */,
 				43C4DB541F53E28F000D7066 /* NSXMLElement+XEP_0059.h in Headers */,
@@ -1621,6 +1651,7 @@
 				43C4DB001F53E28F000D7066 /* XMPPRoster.xcdatamodel in Sources */,
 				43C4DB491F53E28F000D7066 /* XMPPvCardTempAdrTypes.m in Sources */,
 				43C4DB041F53E28F000D7066 /* XMPPUserCoreDataStorageObject.m in Sources */,
+				4382DA7F1F54359B001A0EF7 /* XMPPXFacebookPlatformAuthentication.m in Sources */,
 				43C4DAF21F53E28F000D7066 /* XMPPPresence.m in Sources */,
 				43C4DBA11F53E28F000D7066 /* XMPPIDTracker.m in Sources */,
 				43C4DAD41F53E28F000D7066 /* XMPPDigestMD5Authentication.m in Sources */,
@@ -1651,6 +1682,7 @@
 				43C4DB771F53E28F000D7066 /* XMPPMessageArchiving_Message_CoreDataObject.m in Sources */,
 				43C4DB5B1F53E28F000D7066 /* XMPPPubSub.m in Sources */,
 				43C4DB291F53E28F000D7066 /* XMPPRoomMessageHybridCoreDataStorageObject.m in Sources */,
+				4382DA7D1F54359B001A0EF7 /* XMPPPlainAuthentication.m in Sources */,
 				43C4DB5F1F53E28F000D7066 /* XMPPMessage+XEP_0066.m in Sources */,
 				43C4DB851F53E28F000D7066 /* XMPPMessageDeliveryReceipts.m in Sources */,
 				43C4D99C1F53E215000D7066 /* DDTTYLogger.m in Sources */,
