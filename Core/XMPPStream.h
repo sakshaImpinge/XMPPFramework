@@ -3,8 +3,9 @@
 #import "GCDAsyncSocket.h"
 #import "GCDMulticastDelegate.h"
 
-@import KissXML;
-@import CocoaAsyncSocket;
+#if TARGET_OS_IPHONE
+#import "DDXML.h"
+#endif
 
 
 @class XMPPSRVResolver;

@@ -1,6 +1,5 @@
 #import <CoreData/CoreData.h>
 
-@import KissXML;
 
 @class XMPPCapsResourceCoreDataStorageObject;
 

@@ -255,7 +255,7 @@
 		NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
 		NSTimeInterval elapsed = (now - lastReceiveTime);
 		
-		XMPPLogTrace2(@"%@: %@ - elapsed(%f)", [self class], THIS_METHOD, elapsed);
+		// XMPPLogTrace2(@"%@: %@ - elapsed(%f)", [self class], THIS_METHOD, elapsed);
 		
 		sendPing = ((elapsed < 0) || (elapsed >= pingInterval));
 	}
@@ -275,7 +275,7 @@
 
 - (void)updatePingIntervalTimer
 {
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	NSAssert(pingIntervalTimer != NULL, @"Broken logic (1)");
 	NSAssert(pingInterval > 0, @"Broken logic (2)");
@@ -304,7 +304,7 @@
 
 - (void)startPingIntervalTimer
 {
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	if (pingInterval <= 0)
 	{
@@ -336,7 +336,7 @@
 
 - (void)stopPingIntervalTimer
 {
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	if (pingIntervalTimer)
 	{
@@ -353,7 +353,7 @@
 
 - (void)xmppPing:(XMPPPing *)sender didReceivePong:(XMPPIQ *)pong withRTT:(NSTimeInterval)rtt
 {
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	awaitingPingResponse = NO;
 	[multicastDelegate xmppAutoPingDidReceivePong:self];
@@ -361,7 +361,7 @@
 
 - (void)xmppPing:(XMPPPing *)sender didNotReceivePong:(NSString *)pingID dueToTimeout:(NSTimeInterval)timeout
 {
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	awaitingPingResponse = NO;
 	[multicastDelegate xmppAutoPingDidTimeout:self];

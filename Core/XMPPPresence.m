@@ -32,7 +32,6 @@
 		exit(15);
 	}
 }
-#endif
 
 + (XMPPPresence *)presenceFromElement:(NSXMLElement *)element
 {

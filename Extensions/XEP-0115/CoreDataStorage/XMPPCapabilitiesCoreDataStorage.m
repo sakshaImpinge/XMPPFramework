@@ -33,7 +33,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 
 - (void)commonInit
 {
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	[super commonInit];
 
 	autoRecreateDatabaseFile = YES;
@@ -55,7 +55,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 {
 	NSAssert(dispatch_get_specific(storageQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace2(@"%@: %@ %@", THIS_FILE, THIS_METHOD, jid);
+	//XMPPLogTrace2(@"%@: %@ %@", THIS_FILE, THIS_METHOD, jid);
 	
 	if (jid == nil) return nil;
 	
@@ -78,7 +78,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 	
 	XMPPCapsResourceCoreDataStorageObject *resource = [results lastObject];
 	
-	XMPPLogVerbose(@"%@: %@ - %@", THIS_FILE, THIS_METHOD, resource);
+	//XMPPLogVerbose(@"%@: %@ - %@", THIS_FILE, THIS_METHOD, resource);
 	return resource;
 }
 
@@ -86,7 +86,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 {
 	NSAssert(dispatch_get_specific(storageQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace2(@"%@: capsForHash:%@ algorithm:%@", THIS_FILE, hash, hashAlg);
+	//XMPPLogTrace2(@"%@: capsForHash:%@ algorithm:%@", THIS_FILE, hash, hashAlg);
 	
 	if (hash == nil) return nil;
 	if (hashAlg == nil) return nil;
@@ -106,7 +106,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 	
 	XMPPCapsCoreDataStorageObject *caps = [results lastObject];
 	
-	XMPPLogVerbose(@"%@: %@ - %@", THIS_FILE, THIS_METHOD, caps);
+	//XMPPLogVerbose(@"%@: %@ - %@", THIS_FILE, THIS_METHOD, caps);
 	return caps;
 }
 
@@ -175,7 +175,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 
 - (BOOL)areCapabilitiesKnownForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	__block BOOL result;
 	
@@ -191,7 +191,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 
 - (NSXMLElement *)capabilitiesForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-	XMPPLogTrace();
+	//XMPPLogTrace();
     
     return [self capabilitiesForJID:jid ext:nil xmppStream:stream];	
 }
@@ -201,7 +201,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 	// By design this method should not be invoked from the storageQueue.
 	NSAssert(!dispatch_get_specific(storageQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	__block NSXMLElement *result = nil;
 	__block NSString *ext = nil;
@@ -238,7 +238,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
       andGetNewCapabilities:(NSXMLElement **)newCapabilitiesPtr
 {
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	__block BOOL result = NO;
 	__block NSXMLElement *newCapabilities = nil;
@@ -312,7 +312,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 	// By design this method should not be invoked from the storageQueue.
 	NSAssert(!dispatch_get_specific(storageQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	__block BOOL result = NO;
 	__block NSString *hash = nil;
@@ -350,7 +350,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 
 - (void)clearCapabilitiesHashAndAlgorithmForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	[self scheduleBlock:^{
 	
@@ -392,7 +392,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 	// By design this method should not be invoked from the storageQueue.
 	NSAssert(!dispatch_get_specific(storageQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	__block BOOL areCapabilitiesKnown = NO;
 	__block BOOL haveFailedFetchingBefore = NO;
@@ -445,7 +445,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 
 - (void)setCapabilities:(NSXMLElement *)capabilities forHash:(NSString *)hash algorithm:(NSString *)hashAlg
 {
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	if (hash == nil) return;
 	if (hashAlg == nil) return;
@@ -500,7 +500,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 	// By design this method should not be invoked from the storageQueue.
 	NSAssert(!dispatch_get_specific(storageQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	if (jid == nil) return;
 	
@@ -528,7 +528,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 
 - (void)setCapabilitiesFetchFailedForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	[self scheduleBlock:^{
 		
@@ -543,7 +543,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 	// This method is called for the protocol,
 	// but is also called when we first load the database file from disk.
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	[self scheduleBlock:^{
 		
@@ -554,7 +554,7 @@ static XMPPCapabilitiesCoreDataStorage *sharedInstance;
 
 - (void)clearNonPersistentCapabilitiesForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	[self scheduleBlock:^{
 		

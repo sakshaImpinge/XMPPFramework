@@ -116,7 +116,7 @@
 		}
 		else
 		{
-			XMPPLogError(@"%@: %@ - Unable to configure storage!", THIS_FILE, THIS_METHOD);
+			//XMPPLogError(@"%@: %@ - Unable to configure storage!", THIS_FILE, THIS_METHOD);
 		}
         
         myCapabilitiesNode = DISCO_NODE;
@@ -674,11 +674,11 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	// This method must be invoked on the moduleQueue
 	NSAssert(dispatch_get_specific(moduleQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	if (collectingMyCapabilities)
 	{
-		XMPPLogInfo(@"%@: %@ - Existing collection already in progress", [self class], THIS_METHOD);
+		//XMPPLogInfo(@"%@: %@ - Existing collection already in progress", [self class], THIS_METHOD);
 		return;
 	}
 	
@@ -788,22 +788,22 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	// This method must be invoked on the moduleQueue
 	NSAssert(dispatch_get_specific(moduleQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	collectingMyCapabilities = NO;
 	
 	myCapabilitiesQuery = query;
 	
-	XMPPLogVerbose(@"%@: My capabilities:\n%@", THIS_FILE,
-				   [query XMLStringWithOptions:(NSXMLNodeCompactEmptyElement | NSXMLNodePrettyPrint)]);
+//	XMPPLogVerbose(@"%@: My capabilities:\n%@", THIS_FILE,
+//				   [query XMLStringWithOptions:(NSXMLNodeCompactEmptyElement | NSXMLNodePrettyPrint)]);
 	
 	NSString *hash = [self hashCapabilitiesFromQuery:query];
 	
 	if (hash == nil)
 	{
-		XMPPLogWarn(@"%@: Unable to hash capabilites (in order to send in presense element)\n"
-					"Perhaps there are duplicate advertised features...\n%@", THIS_FILE,
-					[query XMLStringWithOptions:(NSXMLNodeCompactEmptyElement | NSXMLNodePrettyPrint)]);
+//		XMPPLogWarn(@"%@: Unable to hash capabilites (in order to send in presense element)\n"
+//					"Perhaps there are duplicate advertised features...\n%@", THIS_FILE,
+//					[query XMLStringWithOptions:(NSXMLNodeCompactEmptyElement | NSXMLNodePrettyPrint)]);
 		return;
 	}
 	
@@ -991,7 +991,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	// This method must be invoked on the moduleQueue
 	NSAssert(dispatch_get_specific(moduleQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace2(@"%@: %@ %@", THIS_FILE, THIS_METHOD, jid);
+	//XMPPLogTrace2(@"%@: %@ %@", THIS_FILE, THIS_METHOD, jid);
 	
 	// <presence from="romeo@montague.lit/orchard">
 	//   <c xmlns="http://jabber.org/protocol/caps"
@@ -1033,7 +1033,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	                                                   andGetNewCapabilities:&newCapabilities];
 	if (areCapabilitiesKnown)
 	{
-		XMPPLogVerbose(@"%@: Capabilities already known for jid(%@) with hash(%@)", THIS_FILE, jid, ver);
+		//XMPPLogVerbose(@"%@: Capabilities already known for jid(%@) with hash(%@)", THIS_FILE, jid, ver);
 		
 		if (newCapabilities)
 		{
@@ -1062,7 +1062,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	
 	if (jids)
 	{
-		XMPPLogVerbose(@"%@: We're already fetching capabilities for hash(%@)", THIS_FILE, ver);
+		//XMPPLogVerbose(@"%@: We're already fetching capabilities for hash(%@)", THIS_FILE, ver);
 		
 		// Is the jid already included in this list?
 		// 
@@ -1123,7 +1123,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	// This method must be invoked on the moduleQueue
 	NSAssert(dispatch_get_specific(moduleQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace2(@"%@: %@ %@", THIS_FILE, THIS_METHOD, jid);
+	//XMPPLogTrace2(@"%@: %@ %@", THIS_FILE, THIS_METHOD, jid);
 	
 	NSString *node = [c attributeStringValueForName:@"node"];
 	NSString *ver  = [c attributeStringValueForName:@"ver"];
@@ -1151,7 +1151,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	                                                   andGetNewCapabilities:nil];
 	if (areCapabilitiesKnown)
 	{
-		XMPPLogVerbose(@"%@: Capabilities already known for jid(%@)", THIS_FILE, jid);
+		//XMPPLogVerbose(@"%@: Capabilities already known for jid(%@)", THIS_FILE, jid);
 		
 		// The capabilities for this jid are already known
 		return;
@@ -1168,7 +1168,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	
 	if ([discoRequestJidSet containsObject:jid])
 	{
-		XMPPLogVerbose(@"%@: We're already fetching capabilities for jid(%@)", THIS_FILE, jid);
+		//XMPPLogVerbose(@"%@: We're already fetching capabilities for jid(%@)", THIS_FILE, jid);
 		
 		// We've already sent a disco request to this jid.
 		return;
@@ -1194,7 +1194,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	// This method must be invoked on the moduleQueue
 	NSAssert(dispatch_get_specific(moduleQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	if (myCapabilitiesQuery == nil)
 	{
@@ -1238,7 +1238,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	// This method must be invoked on the moduleQueue
 	NSAssert(dispatch_get_specific(moduleQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	// Remember XML hiearchy memory management rules.
 	// The passed parameter is a subnode of the IQ, and we need to pass it asynchronously to storge / delegate(s).
@@ -1253,7 +1253,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	                                                      xmppStream:xmppStream];
 	if (hashResponse)
 	{
-		XMPPLogVerbose(@"%@: %@ - Hash response...", THIS_FILE, THIS_METHOD);
+		//XMPPLogVerbose(@"%@: %@ - Hash response...", THIS_FILE, THIS_METHOD);
 		
 		// Standard version 1.5+
 		
@@ -1263,7 +1263,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 		
 		if ([calculatedHash isEqualToString:hash])
 		{
-			XMPPLogVerbose(@"%@: %@ - Hash matches!", THIS_FILE, THIS_METHOD);
+			//XMPPLogVerbose(@"%@: %@ - Hash matches!", THIS_FILE, THIS_METHOD);
 			
 			// Store the capabilities (associated with the hash)
 			[xmppCapabilitiesStorage setCapabilities:query forHash:hash algorithm:hashAlg];
@@ -1289,7 +1289,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 		}
 		else
 		{
-			XMPPLogWarn(@"%@: Hash mismatch! hash(%@) != calculatedHash(%@)", THIS_FILE, hash, calculatedHash);
+			//XMPPLogWarn(@"%@: Hash mismatch! hash(%@) != calculatedHash(%@)", THIS_FILE, hash, calculatedHash);
 			
 			// Revoke the associated hash from the jid
 			[xmppCapabilitiesStorage clearCapabilitiesHashAndAlgorithmForJID:jid xmppStream:xmppStream];
@@ -1307,7 +1307,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	}
 	else
 	{
-		XMPPLogVerbose(@"%@: %@ - Non-Hash response", THIS_FILE, THIS_METHOD);
+		//XMPPLogVerbose(@"%@: %@ - Non-Hash response", THIS_FILE, THIS_METHOD);
 		
 		// Store the capabilities (associated with the jid)		
 		[xmppCapabilitiesStorage setCapabilities:query forJID:jid xmppStream:xmppStream];
@@ -1328,7 +1328,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	// This method must be invoked on the moduleQueue
 	NSAssert(dispatch_get_specific(moduleQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	NSString *hash = nil;
 	NSString *hashAlg = nil;
@@ -1363,14 +1363,14 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	// This method must be invoked on the moduleQueue
 	NSAssert(dispatch_get_specific(moduleQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	// Get the list of jids that have the same capabilities hash
 	
 	NSMutableArray *jids = [discoRequestHashDict objectForKey:key];
 	if (jids == nil)
 	{
-		XMPPLogWarn(@"%@: %@ - Key doesn't exist in discoRequestHashDict", THIS_FILE, THIS_METHOD);
+		//XMPPLogWarn(@"%@: %@ - Key doesn't exist in discoRequestHashDict", THIS_FILE, THIS_METHOD);
 		
 		return;
 	}
@@ -1629,7 +1629,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	// This method must be invoked on the moduleQueue
 	NSAssert(dispatch_get_specific(moduleQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	// If the timeout occurs, we will remove the jid from the discoRequestJidSet.
 	// If we eventually get a response (after the timeout) we will still be able to process it.
@@ -1665,7 +1665,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	// This method must be invoked on the moduleQueue
 	NSAssert(dispatch_get_specific(moduleQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	// If the timeout occurs, we want to send a request to the next jid with the same capabilities hash.
 	// This list of jids is stored in the discoRequestHashDict.
@@ -1701,7 +1701,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	// This method must be invoked on the moduleQueue
 	NSAssert(dispatch_get_specific(moduleQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	GCDTimerWrapper *timerWrapper = [discoTimerJidDict objectForKey:jid];
 	if (timerWrapper)
@@ -1716,7 +1716,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	// This method must be invoked on the moduleQueue
 	NSAssert(dispatch_get_specific(moduleQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	[self maybeQueryNextJidWithHashKey:key dueToHashMismatch:NO];
 }
@@ -1726,7 +1726,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	// This method must be invoked on the moduleQueue
 	NSAssert(dispatch_get_specific(moduleQueueTag), @"Invoked on incorrect queue");
 	
-	XMPPLogTrace();
+	//XMPPLogTrace();
 	
 	// We queried the jid for its capabilities, but it didn't answer us.
 	// Nothing left to do now but wait.
