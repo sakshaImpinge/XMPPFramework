@@ -1,8 +1,7 @@
 #import <Foundation/Foundation.h>
 #if TARGET_OS_IPHONE
-#import "DDXML.h"
+  #import "DDXML.h"
 #endif
-
 
 @class XMPPStream;
 
@@ -61,7 +60,6 @@ typedef enum XMPPHandleAuthResponse XMPPHandleAuthResponse;
 **/
 - (id)initWithStream:(XMPPStream *)stream password:(NSString *)password;
 
-
 /**
  * Attempts to start the authentication process.
  * The auth mechanism should send whatever stanzas are needed to begin the authentication process.
@@ -82,7 +80,7 @@ typedef enum XMPPHandleAuthResponse XMPPHandleAuthResponse;
  * If the authentication is not yet complete, it should return XMPP_AUTH_CONTINUE,
  * meaning the xmpp stream will continue to forward all incoming xmpp stanzas to this method.
  * 
- * This method is called automatically by XMPPStream (via the authenticate: method).
+ * This method is called by automatically XMPPStream (via the authenticate: method).
  * You should NOT invoke this method manually.
 **/
 - (XMPPHandleAuthResponse)handleAuth:(NSXMLElement *)auth;

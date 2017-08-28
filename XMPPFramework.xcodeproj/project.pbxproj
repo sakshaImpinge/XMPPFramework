@@ -1865,7 +1865,12 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Dependenices/libidn";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Dependenices/libidn",
+					"$(PROJECT_DIR)/Dependenices/KissXML",
+					"$(PROJECT_DIR)/Dependenices/CocoaLumberjack",
+					"$(PROJECT_DIR)/Dependenices/CocoaAsyncSocket",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.robbiehanson.XMPPFramework;
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SKIP_INSTALL = YES;
@@ -1888,7 +1893,12 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Dependenices/libidn";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Dependenices/libidn",
+					"$(PROJECT_DIR)/Dependenices/KissXML",
+					"$(PROJECT_DIR)/Dependenices/CocoaLumberjack",
+					"$(PROJECT_DIR)/Dependenices/CocoaAsyncSocket",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.robbiehanson.XMPPFramework;
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SKIP_INSTALL = YES;

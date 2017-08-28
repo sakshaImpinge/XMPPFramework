@@ -71,15 +71,9 @@
 
 - (id)initWithStream:(XMPPStream *)stream password:(NSString *)inPassword
 {
-	return [self initWithStream:stream username:nil password:inPassword];
-}
-
-- (id)initWithStream:(XMPPStream *)stream username:(NSString *)inUsername password:(NSString *)inPassword
-{
 	if ((self = [super init]))
 	{
 		xmppStream = stream;
-		username = inUsername;
 		password = inPassword;
 	}
 	return self;
@@ -146,10 +140,7 @@
 	if (cnonce == nil)
 		cnonce = [XMPPStream generateUUID];
 	
-	if (username == nil)
-	{
-		username = [myJID user];
-	}
+	username = [myJID user];
 	
 	// Create and send challenge response element
 	
