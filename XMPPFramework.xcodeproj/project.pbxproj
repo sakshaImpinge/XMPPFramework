@@ -11,6 +11,7 @@
 		4382DA7D1F54359B001A0EF7 /* XMPPPlainAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 4382DA781F54359B001A0EF7 /* XMPPPlainAuthentication.m */; };
 		4382DA7E1F54359B001A0EF7 /* XMPPXFacebookPlatformAuthentication.h in Headers */ = {isa = PBXBuildFile; fileRef = 4382DA7A1F54359B001A0EF7 /* XMPPXFacebookPlatformAuthentication.h */; };
 		4382DA7F1F54359B001A0EF7 /* XMPPXFacebookPlatformAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 4382DA7B1F54359B001A0EF7 /* XMPPXFacebookPlatformAuthentication.m */; };
+		43A8E5271F554337009B2537 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43C4D9B21F53E22D000D7066 /* libidn.a */; };
 		43C4D9891F53E215000D7066 /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 43C4D96B1F53E215000D7066 /* GCDAsyncSocket.h */; };
 		43C4D98A1F53E215000D7066 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 43C4D96C1F53E215000D7066 /* GCDAsyncSocket.m */; };
 		43C4D98B1F53E215000D7066 /* GCDAsyncUdpSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 43C4D96D1F53E215000D7066 /* GCDAsyncUdpSocket.h */; };
@@ -561,6 +562,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43A8E5271F554337009B2537 /* libidn.a in Frameworks */,
 				D9DCD6C01E625B4D0010D1C7 /* AppKit.framework in Frameworks */,
 				D9DCD4911E6256D90010D1C7 /* libresolv.tbd in Frameworks */,
 				D9DCD4921E6256D90010D1C7 /* libxml2.tbd in Frameworks */,
@@ -1951,7 +1953,7 @@
 				INFOPLIST_FILE = Core/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Dependenices/libidn";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = org.robbiehanson.XMPPFramework;
 				PRODUCT_NAME = "$(PROJECT_NAME)";
@@ -1974,7 +1976,7 @@
 				INFOPLIST_FILE = Core/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Dependenices/libidn";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = org.robbiehanson.XMPPFramework;
 				PRODUCT_NAME = "$(PROJECT_NAME)";
