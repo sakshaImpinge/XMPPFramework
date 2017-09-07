@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  s.source_files = ['Core/**/*.{h,m}','Dependenices/**/*.{h,m}',
+  s.source_files = ['Core/**/*.{h,m}','Dependenices/**/*.{h,m,a}’,
                     'Authentication/**/*.{h,m}', 'Categories/**/*.{h,m}',
                     'Utilities/**/*.{h,m}', 'Extensions/**/*.{h,m}']
   s.ios.exclude_files = 'Extensions/SystemInputActivityMonitor/**/*.{h,m}'
