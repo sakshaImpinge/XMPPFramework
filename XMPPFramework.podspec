@@ -27,11 +27,24 @@ Pod::Spec.new do |s|
                     'Authentication/**/*.{h,m}', 'Categories/**/*.{h,m}',
                     'Utilities/**/*.{h,m}', 'Extensions/**/*.{h,m}']
   s.ios.exclude_files = 'Extensions/SystemInputActivityMonitor/**/*.{h,m}'
-  s.libraries = 'xml2', 'resolv','idn'
+  s.libraries = 'xml2', 'resolv'
+  s.librarys = 'idn'
   s.frameworks = 'CoreData', 'SystemConfiguration', 'CoreLocation'
   s.xcconfig = {
     'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2 $(SDKROOT)/usr/include/libresolv',
     'LIBRARY_SEARCH_PATHS' => '$(SRCROOT)/Pods/XMPPFramework/Dependenices/libidn',
   }
-  s.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-lidn' }
+  s.ios.vendored_libraries = 'libidn1.a'
+  s.vendored_libraries = 'libidn.a'
 end
+
+
+
+
+
+
+
+
+
+
+
