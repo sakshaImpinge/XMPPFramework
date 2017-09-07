@@ -31,5 +31,7 @@ Pod::Spec.new do |s|
   s.frameworks = 'CoreData', 'SystemConfiguration', 'CoreLocation'
   s.xcconfig = {
     'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2 $(SDKROOT)/usr/include/libresolv',
+    'LIBRARY_SEARCH_PATHS' => '$(SRCROOT)/Pods/XMPPFramework/Dependenices/libidn',
   }
+  s.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-lidn' }
 end
