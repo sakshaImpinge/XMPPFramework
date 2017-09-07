@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
                     'Authentication/**/*.{h,m}', 'Categories/**/*.{h,m}',
                     'Utilities/**/*.{h,m}', 'Extensions/**/*.{h,m}']
   s.ios.exclude_files = 'Extensions/SystemInputActivityMonitor/**/*.{h,m}'
-  s.libraries = 'xml2', 'resolv'
+  s.libraries = 'xml2', 'resolv','idn'
   s.frameworks = 'CoreData', 'SystemConfiguration', 'CoreLocation'
   s.xcconfig = {
     'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2 $(SDKROOT)/usr/include/libresolv',
