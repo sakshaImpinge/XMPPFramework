@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
                     'Utilities/**/*.{h,m}', 'Extensions/**/*.{h,m}']
   s.ios.exclude_files = 'Extensions/SystemInputActivityMonitor/**/*.{h,m}'
   s.libraries = 'xml2', 'resolv'
-  s.frameworks = 'CoreData', 'SystemConfiguration', 'CoreLocation'
+  s.frameworks = 'CoreData', 'SystemConfiguration', 'CoreLocation','libidn'
   s.vendored_libraries = 'libidn.a'
   s.ios.vendored_libraries = 'libidn.a'
   s.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-lidn' }
